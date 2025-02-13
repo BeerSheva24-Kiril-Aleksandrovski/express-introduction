@@ -1,0 +1,6 @@
+{
+    "morgan": {
+        "type": "tiny",
+        "stream": "./logs/log.txt"
+    }
+}

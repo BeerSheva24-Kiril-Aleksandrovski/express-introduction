@@ -1,26 +1,33 @@
-import express from 'express';
+import express from 'express'
+import { valid, validator } from '../middleware/validation.js';
+import { schemaPost } from '../validation/schemas.js';
+import service from '../service/CoursesService.js';
 
-app.post("/api/v1/courses", validator(schemaPost), (req, res) => {
+const coursesRoute = express.Router();
+
+coursesRoute.post("/", validator(schemaPost), (req, res) => {
     const course = service.addCourse(req.body);
     res.status(201).send(course);
 });
 
-app.get("/api/v1/courses/:id", (req, res) => {
+coursesRoute.get("/:id", (req, res) => {
     const id = req.params.id
     res.send(service.getCourse(id));
 });
 
-app.delete("/api/v1/courses/:id", valid, (req, res) => {
+coursesRoute.delete("/:id", (req, res) => {
     const course = service.removeCourse(req.params.id);
     res.send(course);
 });
 
-app.put("/api/v1/courses/:id", valid, (req, res) => {
+coursesRoute.put("/:id", valid, (req, res) => {
     
     const course = service.updateCourse(req.params.id, req.body);
     res.send(course);
 });
 
-app.get("/api/v1/courses", (req, res) => {
+coursesRoute.get("/", (req, res) => {
     res.send(service.findCourses(req.query));
 });
+
+export default coursesRoute;
