@@ -1,5 +1,4 @@
 import { createError } from "../errors/errors.js";
-
 class CoursesService {
     #courses = {
         J101: { id: "J101", name: "Front-End", lecturer: "Vasya", hours: 200 },
@@ -9,7 +8,6 @@ class CoursesService {
         J105: { id: "J105", name: "AWS", lecturer: "Vova", hours: 200 },
         J106: { id: "J106", name: "C++", lecturer: "Vova", hours: 500 },
     };
-
     addCourse(course) {
         const id = course.id;
         if (this.#courses[id]) {
@@ -18,19 +16,16 @@ class CoursesService {
         this.#courses[id] = course;
         return this.#courses[id];
     }
-    
     removeCourse(id) {
         this.#notFound(id);
         const course = this.#courses[id];
         delete this.#courses[id];
         return course;
     }
-    
     getCourse(id) {
         this.#notFound(id);
         return this.#courses[id];
     }
-    
     findCourses(filter) {
         const { lecturer, hours, name } = filter;
         return Object.values(this.#courses).filter(
@@ -40,20 +35,16 @@ class CoursesService {
                 (name ? c.name == name : true)
         );
     }
-    
     updateCourse(id, updatingObj) {
         this.#notFound(id);
         this.#courses[id] = { ...this.#courses[id], ...updatingObj };
         return this.#courses[id]
     }
-    
     #notFound(id) {
         if (!this.#courses[id]) {
             throw createError(404, `course with id ${id} doesn't exist`);
         }
     }
 }
-
 const service = new CoursesService();
-
 export default service;

@@ -1,9 +1,11 @@
 import express from 'express'
-import { valid, validator } from '../middleware/validation.js';
-import { schemaPost } from '../validation/schemas.js';
+import { valid, validator, expressValidator } from '../middleware/validation.js';
+import { schemaPost, schemaPut } from '../validation/schemas.js';
 import service from '../service/CoursesService.js';
 
 const coursesRoute = express.Router();
+
+coursesRoute.use(expressValidator({ POST: schemaPost, PUT: schemaPut }));
 
 coursesRoute.post("/", validator(schemaPost), (req, res) => {
     const course = service.addCourse(req.body);
@@ -21,7 +23,6 @@ coursesRoute.delete("/:id", (req, res) => {
 });
 
 coursesRoute.put("/:id", valid, (req, res) => {
-    
     const course = service.updateCourse(req.params.id, req.body);
     res.send(course);
 });
