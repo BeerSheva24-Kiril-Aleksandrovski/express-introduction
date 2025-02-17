@@ -6,8 +6,6 @@ import { authenticate, auth } from '../middleware/auth.js';
 
 const accountsRoute = express.Router();
 
-accountsRoute.use(authenticate());
-
 accountsRoute.post("/admin", validator(schemaAccount), (req, res) => {
     accountingService.addAdminAccount(req.body);
     res.status(201).send("admin account added")
@@ -23,7 +21,7 @@ accountsRoute.put("/", validator(schemaAccount), (req, res) => {
     res.send("account updated")
 });
 
-accountsRoute.get("/", auth, validator(schemaGetAccount), (req, res) => {
+accountsRoute.get("/", validator(schemaGetAccount), (req, res) => {
     const account = accountingService.getAccount(req.body.email);
     res.send(account);
 });
