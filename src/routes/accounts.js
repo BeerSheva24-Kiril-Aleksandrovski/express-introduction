@@ -3,8 +3,11 @@ import { validator } from "../middleware/validation.js";
 import { schemaAccount, schemaGetAccount } from "../validation/schemas.js";
 import accountingService from "../service/accountingService.js";
 import { authenticate, auth } from '../middleware/auth.js';
+import accountingPaths from "../paths/accountingPaths.js"
 
 const accountsRoute = express.Router();
+
+accountsRoute.use(auth(accountingPaths));
 
 accountsRoute.post("/admin", validator(schemaAccount), (req, res) => {
     accountingService.addAdminAccount(req.body);

@@ -26,7 +26,7 @@ function jwtAuthentication(req, authHeader) {
         const payload = JwtUtils.verifyJwt(token);
         req.user = payload.sub;
         req.role = payload.role;
-        req.authType = "jwt"
+        req.authType = "jwt";
     } catch (error) { }
 }
 
@@ -35,11 +35,20 @@ function basicAuthentication(req, authHeader) {
     const usernamePassword = Buffer.from(usernamePassword64, 'base64').toString('utf-8');
     const usernamePasswordArr = usernamePassword.split(":");
     try {
-        const serviceAccount = accountingService.getAccount(usernamePasswordArr[0]);
-        accountingService.checkLogin(serviceAccount, usernamePasswordArr[1])
-        req.user = usernamePasswordArr[0];
-        req.role = serviceAccount.role;
-        req.authType = 'basic';
+        if (usernamePasswordArr[0] === process.env.ADMIN_USERNAME) {
+            if (usernamePasswordArr[1] === process.env.ADMIN_USERNAME) {
+                req.user = process.env.ADMIN_USERNAME;
+                req.role = "";
+                req.authType = 'basic';
+            }
+        } else {
+            const serviceAccount = accountingService.getAccount(usernamePasswordArr[0]);
+            accountingService.checkLogin(serviceAccount,usernamePasswordArr[1])
+            req.user = usernamePasswordArr[0];
+            req.role = serviceAccount.role;
+            req.authType = 'basic';
+        }
+        
     } catch (error) {
 
     }
